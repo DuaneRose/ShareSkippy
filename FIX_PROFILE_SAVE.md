@@ -112,3 +112,4 @@ neighborhood  | text
 2. Test profile saving
 3. If successful, you can now use the location features
 4. If any issues remain, check the browser console for specific error messages
+

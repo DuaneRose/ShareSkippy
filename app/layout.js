@@ -1,6 +1,7 @@
 import { Inter } from "next/font/google";
 import { getSEOTags } from "@/libs/seo";
 import ClientLayout from "@/components/LayoutClient";
+import AppLayout from "@/components/AppLayout";
 import config from "@/config";
 import "./globals.css";
 
@@ -26,7 +27,9 @@ export default function RootLayout({ children }) {
 		>
 			<body>
 				{/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
-				<ClientLayout>{children}</ClientLayout>
+				<ClientLayout>
+					<AppLayout>{children}</AppLayout>
+				</ClientLayout>
 			</body>
 		</html>
 	);

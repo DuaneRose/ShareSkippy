@@ -111,3 +111,4 @@ The updated schema includes:
 - Better RLS policies for upsert operations
 - Proper data type definitions
 - Improved error handling in triggers
+

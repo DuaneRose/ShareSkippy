@@ -1,36 +1,63 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import ButtonSignin from "./ButtonSignin";
+import { createClient } from "@/libs/supabase/client";
 import logo from "@/app/icon.png";
 import config from "@/config";
 
-const links = [
+const navigationItems = [
   {
-    href: "/#testimonials",
-    label: "Reviews",
+    href: "/dashboard",
+    label: "Community",
   },
   {
-    href: "/faq",
-    label: "FAQ",
+    href: "/share-availability",
+    label: "Share Availability",
+  },
+  {
+    href: "/messages",
+    label: "Messages",
+  },
+  {
+    href: "/meetings",
+    label: "Meetings",
+  },
+  {
+    href: "/my-dogs",
+    label: "My Dogs",
+  },
+  {
+    href: "/profile",
+    label: "Profile",
   },
 ];
 
-const cta = <ButtonSignin extraStyle="btn-primary" />;
-
-// A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
-// The header is responsive, and on mobile, the links are hidden behind a burger button.
-const Header = () => {
+const LoggedInNav = () => {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const supabase = createClient();
 
-  // setIsOpen(false) when the route changes (i.e: when the user clicks on a link on mobile)
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, [supabase.auth]);
+
   useEffect(() => {
     setIsOpen(false);
   }, [searchParams]);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  };
 
   return (
     <header className="bg-base-200">
@@ -38,12 +65,12 @@ const Header = () => {
         className="container flex items-center justify-between px-8 py-4 mx-auto"
         aria-label="Global"
       >
-        {/* Your logo/name on large screens */}
+        {/* Logo on large screens */}
         <div className="flex lg:flex-1">
           <Link
-            className="flex items-center gap-2 shrink-0 "
-            href="/"
-            title={`${config.appName} hompage`}
+            className="flex items-center gap-2 shrink-0"
+            href="/dashboard"
+            title={`${config.appName} dashboard`}
           >
             <Image
               src={logo}
@@ -57,6 +84,7 @@ const Header = () => {
             <span className="font-extrabold text-lg">{config.appName}</span>
           </Link>
         </div>
+
         {/* Burger button to open menu on mobile */}
         <div className="flex lg:hidden">
           <button
@@ -82,35 +110,44 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Your links on large screens */}
-        <div className="hidden lg:flex lg:justify-center lg:gap-12 lg:items-center">
-          {links.map((link) => (
+        {/* Navigation items on large screens */}
+        <div className="hidden lg:flex lg:justify-center lg:gap-8 lg:items-center">
+          {navigationItems.map((item) => (
             <Link
-              href={link.href}
-              key={link.href}
-              className="link link-hover"
-              title={link.label}
+              href={item.href}
+              key={item.href}
+              className={`link link-hover px-3 py-2 rounded-lg transition-colors ${
+                pathname === item.href ? "bg-primary text-primary-content" : ""
+              }`}
+              title={item.label}
             >
-              {link.label}
+              {item.label}
             </Link>
           ))}
         </div>
 
-        {/* CTA on large screens */}
-        <div className="hidden lg:flex lg:justify-end lg:flex-1">{cta}</div>
+        {/* Sign out button on large screens */}
+        <div className="hidden lg:flex lg:justify-end lg:flex-1">
+          <button
+            onClick={handleSignOut}
+            className="btn btn-outline btn-sm"
+          >
+            Sign out
+          </button>
+        </div>
       </nav>
 
-      {/* Mobile menu, show/hide based on menu state. */}
+      {/* Mobile menu */}
       <div className={`relative z-50 ${isOpen ? "" : "hidden"}`}>
         <div
           className={`fixed inset-y-0 right-0 z-10 w-full px-8 py-4 overflow-y-auto bg-base-200 sm:max-w-sm sm:ring-1 sm:ring-neutral/10 transform origin-right transition ease-in-out duration-300`}
         >
-          {/* Your logo/name on small screens */}
+          {/* Logo on small screens */}
           <div className="flex items-center justify-between">
             <Link
-              className="flex items-center gap-2 shrink-0 "
-              title={`${config.appName} hompage`}
-              href="/"
+              className="flex items-center gap-2 shrink-0"
+              title={`${config.appName} dashboard`}
+              href="/dashboard"
             >
               <Image
                 src={logo}
@@ -146,25 +183,34 @@ const Header = () => {
             </button>
           </div>
 
-          {/* Your links on small screens */}
+          {/* Navigation items on small screens */}
           <div className="flow-root mt-6">
             <div className="py-4">
               <div className="flex flex-col gap-y-4 items-start">
-                {links.map((link) => (
+                {navigationItems.map((item) => (
                   <Link
-                    href={link.href}
-                    key={link.href}
-                    className="link link-hover"
-                    title={link.label}
+                    href={item.href}
+                    key={item.href}
+                    className={`link link-hover w-full px-3 py-2 rounded-lg transition-colors ${
+                      pathname === item.href ? "bg-primary text-primary-content" : ""
+                    }`}
+                    title={item.label}
                   >
-                    {link.label}
+                    {item.label}
                   </Link>
                 ))}
               </div>
             </div>
             <div className="divider"></div>
-            {/* Your CTA on small screens */}
-            <div className="flex flex-col">{cta}</div>
+            {/* Sign out button on small screens */}
+            <div className="flex flex-col">
+              <button
+                onClick={handleSignOut}
+                className="btn btn-outline btn-sm w-full"
+              >
+                Sign out
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -172,4 +218,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default LoggedInNav;
