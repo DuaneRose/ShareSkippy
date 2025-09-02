@@ -14,6 +14,7 @@ export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState('dog-availability');
   const [joiningEvent, setJoiningEvent] = useState(null);
   const [messageModal, setMessageModal] = useState({ isOpen: false, recipient: null, availabilityPost: null });
+  const [deletingPost, setDeletingPost] = useState(null);
 
   const formatAvailabilitySchedule = (enabledDays, daySchedules) => {
     if (!enabledDays || !daySchedules) return [];
@@ -315,6 +316,7 @@ export default function CommunityPage() {
     if (!user || !confirm('Are you sure you want to delete this post? This action cannot be undone.')) return;
 
     try {
+      setDeletingPost(postId);
       const supabase = createClient();
       const { error } = await supabase
         .from('availability')
@@ -324,7 +326,7 @@ export default function CommunityPage() {
 
       if (error) {
         console.error('Error deleting post:', error);
-        alert('Failed to delete post');
+        alert('Failed to delete post: ' + (error.message || 'Unknown error'));
         return;
       }
 
@@ -333,42 +335,10 @@ export default function CommunityPage() {
       alert('Post deleted successfully');
     } catch (error) {
       console.error('Error deleting post:', error);
-      alert('Failed to delete post');
+      alert('Failed to delete post: ' + (error.message || 'Unknown error'));
+    } finally {
+      setDeletingPost(null);
     }
-  };
-
-  const togglePostStatus = async (postId, currentStatus) => {
-    if (!user) return;
-
-    try {
-      const supabase = createClient();
-      const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-      
-      const { error } = await supabase
-        .from('availability')
-        .update({ status: newStatus })
-        .eq('id', postId)
-        .eq('owner_id', user.id);
-
-      if (error) {
-        console.error('Error updating post status:', error);
-        alert('Failed to update post status');
-        return;
-      }
-
-      // Update local state
-      setMyAvailabilityPosts(myAvailabilityPosts.map(post => 
-        post.id === postId ? { ...post, status: newStatus } : post
-      ));
-    } catch (error) {
-      console.error('Error updating post status:', error);
-      alert('Failed to update post status');
-    }
-  };
-
-  const editPost = (postId) => {
-    // Navigate to edit page
-    window.location.href = `/share-availability?edit=${postId}`;
   };
 
   if (loading) {
@@ -874,8 +844,12 @@ export default function CommunityPage() {
                           <button className="bg-gray-600 text-white px-3 py-1 rounded text-sm hover:bg-gray-700 transition-colors">
                             Edit
                           </button>
-                          <button className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors">
-                            Delete
+                          <button 
+                            onClick={() => deletePost(post.id)}
+                            className={`bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors ${deletingPost === post.id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={deletingPost === post.id}
+                          >
+                            {deletingPost === post.id ? 'Deleting...' : 'Delete'}
                           </button>
                         </div>
                       </div>

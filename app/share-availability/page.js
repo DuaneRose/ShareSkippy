@@ -680,7 +680,7 @@ export default function ShareAvailability() {
                           type="checkbox"
                           checked={selectedDogs.includes(dog.id)}
                           onChange={() => handleDogSelection(dog.id)}
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded"
                         />
                         <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                           {dog.photo_url ? (
@@ -832,7 +832,7 @@ export default function ShareAvailability() {
                   id="is_urgent"
                   checked={formData.is_urgent}
                   onChange={(e) => handleCheckboxChange('is_urgent', e.target.checked)}
-                  className="w-4 h-4 text-red-600 mr-2"
+                  className="w-4 h-4 text-red-600 mr-2 bg-white border-gray-300 rounded"
                 />
                 <label htmlFor="is_urgent" className="text-sm font-medium text-gray-700">
                   This is urgent
@@ -1012,7 +1012,7 @@ export default function ShareAvailability() {
                     id="can_pick_up_drop_off"
                     checked={formData.can_pick_up_drop_off}
                     onChange={(e) => handleCheckboxChange('can_pick_up_drop_off', e.target.checked)}
-                    className="w-4 h-4 text-blue-600 mr-2"
+                    className="w-4 h-4 text-blue-600 mr-2 bg-white border-gray-300 rounded"
                   />
                   <label htmlFor="can_pick_up_drop_off" className="text-sm font-medium text-gray-700">
                     Can pick up/drop off
