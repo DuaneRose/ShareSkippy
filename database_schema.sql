@@ -34,11 +34,16 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- Create reviews table (for the ratings feature)
 CREATE TABLE IF NOT EXISTS reviews (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  reviewer_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-  reviewee_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
-  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-  comment TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  meeting_id UUID REFERENCES meetings(id) ON DELETE CASCADE NOT NULL,
+  reviewer_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  reviewee_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  reviewer_role TEXT NOT NULL CHECK (reviewer_role IN ('requester', 'recipient')),
+  rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT NOT NULL CHECK (length(trim(comment)) >= 5),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  CONSTRAINT unique_meeting_reviewer UNIQUE (meeting_id, reviewer_id),
+  CONSTRAINT different_reviewer_reviewee CHECK (reviewer_id != reviewee_id)
 );
 
 -- Create dogs table
