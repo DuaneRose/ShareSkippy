@@ -5,11 +5,11 @@ import config from '@/config';
 
 // Email template paths
 const TEMPLATE_PATHS = {
-  welcome: './email-templates/welcome-email.html',
-  newMessage: './email-templates/new-message-notification.html',
-  meetingScheduled: './email-templates/meeting-scheduled-confirmation.html',
-  meetingReminder: './email-templates/meeting-reminder-1day.html',
-  followUp: './email-templates/follow-up-1week.html',
+  welcome: path.join(process.cwd(), 'email-templates', 'welcome-email.html'),
+  newMessage: path.join(process.cwd(), 'email-templates', 'new-message-notification.html'),
+  meetingScheduled: path.join(process.cwd(), 'email-templates', 'meeting-scheduled-confirmation.html'),
+  meetingReminder: path.join(process.cwd(), 'email-templates', 'meeting-reminder-1day.html'),
+  followUp: path.join(process.cwd(), 'email-templates', 'follow-up-1week.html'),
 };
 
 /**
@@ -20,8 +20,7 @@ const TEMPLATE_PATHS = {
  */
 function loadTemplate(templatePath, variables = {}) {
   try {
-    const fullPath = path.resolve(templatePath);
-    let html = fs.readFileSync(fullPath, 'utf8');
+    let html = fs.readFileSync(templatePath, 'utf8');
     
     // Replace variables in the template
     Object.entries(variables).forEach(([key, value]) => {
