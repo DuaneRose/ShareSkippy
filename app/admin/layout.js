@@ -69,7 +69,7 @@ export default function AdminLayout({ children }) {
   // Add your email address here to make yourself an admin
   const adminEmails = [
     'admin@shareskippy.com',
-    'kcolban@gmail.com', // Admin email
+    'support@shareskippy.com', // Admin email
     // Add more admin emails as needed
   ];
   

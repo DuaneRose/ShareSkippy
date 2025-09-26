@@ -581,7 +581,7 @@ export default function HowToUsePage() {
                       <p className="text-gray-600">
                         Need help or want to report an issue? We're here to help!{' '}
                         <a 
-                          href="mailto:kcolban@gmail.com" 
+                          href="mailto:support@shareskippy.com" 
                           className="text-purple-600 hover:text-purple-700 font-medium underline"
                         >
                           Email Us!

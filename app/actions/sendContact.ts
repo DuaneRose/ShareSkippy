@@ -97,7 +97,7 @@ This message was sent from the ShareSkippy contact form.
       `;
 
       await sendEmail({
-        to: 'kcolban@gmail.com',
+        to: 'support@shareskippy.com',
         subject: emailSubject,
         text: emailText,
         html: emailHtml,
@@ -120,7 +120,7 @@ This message was sent from the ShareSkippy contact form.
       return { 
         ok: false, 
         errors: { 
-          _: ['Failed to send message. Please try again or contact support directly at kcolban@gmail.com.'] 
+          _: ['Failed to send message. Please try again or contact support directly at support@shareskippy.com.'] 
         } 
       };
     }

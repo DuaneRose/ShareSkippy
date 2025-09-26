@@ -53,10 +53,10 @@ export default function ContactForm() {
         <p className="text-sm text-gray-600">
           If you have an urgent issue, you can also email us directly at{' '}
           <a 
-            href="mailto:kcolban@gmail.com" 
+            href="mailto:support@shareskippy.com" 
             className="text-blue-600 hover:text-blue-800 underline"
           >
-            kcolban@gmail.com
+            support@shareskippy.com
           </a>
         </p>
       </Callout>
