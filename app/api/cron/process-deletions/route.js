@@ -150,7 +150,7 @@ export async function POST(request) {
 // GET /api/cron/process-deletions - Check status (for monitoring)
 export async function GET() {
   try {
-    const supabase = createClient();
+    const supabase = createServiceClient();
     
     // Get count of pending deletion requests
     const { count: pendingCount, error: pendingError } = await supabase
