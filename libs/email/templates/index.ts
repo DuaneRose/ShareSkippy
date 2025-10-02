@@ -58,7 +58,7 @@ export async function loadEmailTemplate(
     throw new Error(`Unknown email type: ${emailType}`);
   }
 
-  const templatesDir = path.join(process.cwd(), 'email-templates');
+  const templatesDir = path.join(__dirname);
   
   // Load HTML template
   const htmlPath = path.join(templatesDir, templateConfig.html);
