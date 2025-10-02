@@ -565,6 +565,14 @@ export default function ShareAvailability() {
                 {dogs.length === 0 && (
                   <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-3 py-2 rounded text-sm">
                     ⚠️ You need to add a dog to your profile first
+                    <div className="mt-2">
+                      <a 
+                        href="/my-dogs/add" 
+                        className="text-yellow-900 underline font-medium hover:text-yellow-700 transition-colors"
+                      >
+                        Add a dog to your profile
+                      </a>
+                    </div>
                   </div>
                 )}
                 {dogs.length > 0 && (
