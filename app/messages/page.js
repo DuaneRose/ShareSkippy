@@ -309,8 +309,8 @@ export default function MessagesPage() {
                     </div>
                   ))
                 )}
-              </div>
-            </div>
+          </div>
+        </aside>
 
         {/* Thread */}
         <section className="flex-1 min-h-0 flex flex-col">
@@ -434,23 +434,22 @@ export default function MessagesPage() {
         </section>
       </div>
 
-        {/* Message Modal */}
-        <MessageModal
-          isOpen={messageModal.isOpen}
-          onClose={closeMessageModal}
-          recipient={messageModal.recipient}
-          availabilityPost={messageModal.availabilityPost}
-        />
+      {/* Message Modal */}
+      <MessageModal
+        isOpen={messageModal.isOpen}
+        onClose={closeMessageModal}
+        recipient={messageModal.recipient}
+        availabilityPost={messageModal.availabilityPost}
+      />
 
-        {/* Meeting Modal */}
-        <MeetingModal
-          isOpen={meetingModal.isOpen}
-          onClose={closeMeetingModal}
-          recipient={meetingModal.recipient}
-          conversation={meetingModal.conversation}
-          onMeetingCreated={handleMeetingCreated}
-        />
-      </div>
+      {/* Meeting Modal */}
+      <MeetingModal
+        isOpen={meetingModal.isOpen}
+        onClose={closeMeetingModal}
+        recipient={meetingModal.recipient}
+        conversation={meetingModal.conversation}
+        onMeetingCreated={handleMeetingCreated}
+      />
     </div>
   );
 }
