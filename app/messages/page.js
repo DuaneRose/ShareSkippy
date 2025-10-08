@@ -232,21 +232,21 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto py-8 px-4">
+    <div className="min-h-screen bg-gray-50" style={{ height: '100vh', overflow: 'hidden' }}>
+      <div className="max-w-6xl mx-auto py-4 sm:py-8 px-4 h-full">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <div className="mb-4 sm:mb-8">
+          <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             💬 Messages
           </h1>
-          <p className="text-gray-600">Connect with other dog lovers in your community</p>
+          <p className="text-gray-600 text-sm sm:text-base">Connect with other dog lovers in your community</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="flex flex-col lg:flex-row h-[600px]">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden flex-1 flex flex-col">
+          <div className="flex flex-col lg:flex-row flex-1 min-h-0">
             {/* Conversations Sidebar */}
-            <div className={`w-full lg:w-1/3 border-r border-gray-200 bg-gray-50 ${showConversations ? 'block' : 'hidden lg:block'}`}>
-              <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+            <div className={`w-full lg:w-1/3 border-r border-gray-200 bg-gray-50 flex flex-col ${showConversations ? 'block' : 'hidden lg:flex'}`}>
+              <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
                 <h2 className="text-lg font-semibold text-gray-900">Conversations</h2>
                 <button
                   onClick={() => setShowConversations(false)}
@@ -256,7 +256,7 @@ export default function MessagesPage() {
                 </button>
               </div>
               
-              <div className="overflow-y-auto h-full">
+              <div className="overflow-y-auto flex-1" style={{ WebkitOverflowScrolling: 'touch' }}>
                 {loading ? (
                   <div className="p-4 text-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
@@ -309,11 +309,11 @@ export default function MessagesPage() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 flex flex-col w-full lg:w-auto">
+            <div className="flex-1 flex flex-col w-full lg:w-auto min-h-0">
               {selectedConversation ? (
                 <>
                   {/* Conversation Header */}
-                  <div className="p-4 border-b border-gray-200 bg-white">
+                  <div className="p-3 sm:p-4 border-b border-gray-200 bg-white flex-shrink-0">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                       <div className="flex items-center space-x-3">
                         <button
@@ -357,14 +357,14 @@ export default function MessagesPage() {
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ WebkitOverflowScrolling: 'touch' }}>
                     {messages.map((message) => (
                       <div
                         key={message.id}
                         className={`flex ${message.sender_id === user.id ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
-                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                          className={`max-w-xs sm:max-w-sm lg:max-w-md px-4 py-2 rounded-lg break-words ${
                             message.sender_id === user.id
                               ? 'bg-blue-600 text-white'
                               : 'bg-gray-200 text-gray-900'
@@ -382,7 +382,7 @@ export default function MessagesPage() {
                   </div>
 
                   {/* Message Input */}
-                  <div className="p-4 border-t border-gray-200">
+                  <div className="p-3 sm:p-4 border-t border-gray-200 flex-shrink-0">
                     <form onSubmit={sendMessage} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                       <input
                         type="text"
