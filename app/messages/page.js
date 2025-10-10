@@ -569,18 +569,30 @@ export default function MessagesPage() {
               {/* Message Input */}
               <div className="flex-shrink-0 border-t bg-white p-4 p-safe">
                     <form onSubmit={sendMessage} className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3 message-input">
-                      <input
-                        type="text"
+                      <textarea
                         value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
+                        onChange={(e) => {
+                          setNewMessage(e.target.value);
+                          // Auto-resize textarea
+                          const textarea = e.target;
+                          textarea.style.height = 'auto';
+                          textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px'; // Max 6 lines (20px per line)
+                        }}
+                        onInput={(e) => {
+                          // Auto-resize on input (for mobile)
+                          const textarea = e.target;
+                          textarea.style.height = 'auto';
+                          textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+                        }}
                         placeholder="Type your message..."
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-sm"
+                        className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-sm auto-resize-textarea"
                         disabled={sending}
+                        rows={1}
                       />
                       <button
                         type="submit"
                         disabled={sending || !newMessage.trim()}
-                        className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap font-medium text-sm"
+                        className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap font-medium text-sm self-end"
                       >
                         {sending ? 'Sending...' : 'Send'}
                       </button>

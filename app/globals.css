@@ -79,6 +79,39 @@ body {
   .message-input textarea {
     word-break: break-word;
     overflow-wrap: break-word;
+    /* Ensure textarea doesn't get covered by mobile keyboard */
+    transition: height 0.1s ease-out;
+  }
+  
+  /* Auto-resizing textarea styles */
+  .auto-resize-textarea {
+    resize: none;
+    overflow-y: auto;
+    min-height: 48px;
+    max-height: 120px;
+    line-height: 1.4;
+  }
+  
+  /* Modal textarea can be taller */
+  .modal-textarea {
+    max-height: 200px;
+    min-height: 60px;
+  }
+  
+  /* Mobile keyboard handling */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific */
+    .message-input textarea {
+      -webkit-appearance: none;
+      border-radius: 12px;
+    }
+  }
+  
+  /* Android Chrome specific */
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .message-input textarea {
+      border-radius: 12px;
+    }
   }
 }
 

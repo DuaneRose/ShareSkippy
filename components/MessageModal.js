@@ -110,9 +110,21 @@ export default function MessageModal({ isOpen, onClose, recipient, availabilityP
             </label>
             <textarea
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              rows={5}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black resize-none"
+              onChange={(e) => {
+                setMessage(e.target.value);
+                // Auto-resize textarea
+                const textarea = e.target;
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px'; // Max 10 lines
+              }}
+              onInput={(e) => {
+                // Auto-resize on input (for mobile)
+                const textarea = e.target;
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 200) + 'px';
+              }}
+              rows={3}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-black auto-resize-textarea modal-textarea"
               placeholder="Type your message here..."
               required
             />
