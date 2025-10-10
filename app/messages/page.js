@@ -10,6 +10,14 @@ export default function MessagesPage() {
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
+  
+  // Debug messages state changes
+  useEffect(() => {
+    console.log('[Messages] State updated - messages count:', messages.length);
+    if (messages.length > 0) {
+      console.log('[Messages] First message:', messages[0]);
+    }
+  }, [messages]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [newMessage, setNewMessage] = useState('');
@@ -60,9 +68,13 @@ export default function MessagesPage() {
     (async () => {
       try {
         const data = await fetchMessages(selectedConversation.id);
+        console.log('[Messages] fetchMessages returned:', data?.length ?? 0, 'messages');
         // Only update if not cancelled and not aborted
         if (!cancelled && !abortControllerRef.current?.signal.aborted) {
+          console.log('[Messages] Setting messages in state...');
           setMessages(data || []);
+        } else {
+          console.log('[Messages] Request was cancelled or aborted, not updating state');
         }
       } catch (e) {
         // Only show error if not cancelled and not aborted
@@ -227,7 +239,9 @@ export default function MessagesPage() {
         throw error;
       }
       
+      console.log('[fetchMessages] Setting messages:', data);
       setMessages(data || []);
+      console.log('[fetchMessages] Messages state updated');
     } catch (error) {
       console.error('Error fetching messages:', error);
       setMessages([]); // Clear messages on error
