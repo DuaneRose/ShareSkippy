@@ -233,10 +233,10 @@ export default function ProfileEditPage() {
 
       console.log('Profile saved successfully:', data);
       toast.success('Profile saved successfully!');
-      console.log('Redirecting to share-availability page...');
+      console.log('Redirecting to welcome page...');
       
       // Use window.location for a full page navigation to ensure proper context loading
-      window.location.href = '/share-availability';
+      window.location.href = '/onboarding/welcome';
     } catch (err) {
       console.error('Error saving profile:', err);
       
@@ -479,67 +479,6 @@ export default function ProfileEditPage() {
           </div>
         </div>
 
-        {/* Community Support Preferences */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-4">Community Support Preferences</h2>
-
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                I feel most empowered supporting: (Select all that apply)
-              </label>
-              <div className="space-y-2">
-                {[
-                  { value: 'elderly_dog_owners', label: 'Elderly dog owners' },
-                  { value: 'sick_recovering', label: 'Sick or recovering owners' },
-                  { value: 'low_income_families', label: 'Low-income families' },
-                  { value: 'people_disabilities', label: 'People with disabilities' },
-                  { value: 'single_parents', label: 'Single parents' },
-                  { value: 'other', label: 'Other' }
-                ].map(pref => (
-                  <label key={pref.value} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={profile.support_preferences.includes(pref.value)}
-                      onChange={() => handleSupportPreferenceChange(pref.value)}
-                      className="mr-3"
-                    />
-                    {pref.label}
-                  </label>
-                ))}
-              </div>
-              
-              {profile.support_preferences.includes('other') && (
-                <div className="mt-3">
-                  <input
-                    type="text"
-                    name="other_support_description"
-                    value={profile.other_support_description}
-                    onChange={handleInputChange}
-                    placeholder="Please describe (up to 10 words)"
-                    maxLength={100}
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent text-black"
-                  />
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Additional thoughts about community support
-              </label>
-              <textarea
-                name="support_story"
-                value={profile.support_story}
-                onChange={handleInputChange}
-                rows={3}
-                placeholder="Any additional context about how you'd like to support or be supported..."
-                className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-        </div>
 
         {/* Social Media Links */}
         <div className="bg-white p-6 rounded-lg shadow">
