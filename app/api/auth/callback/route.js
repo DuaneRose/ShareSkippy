@@ -37,6 +37,9 @@ export async function GET(req) {
 
       console.log("Session created successfully for user:", data.user?.id);
       
+      // Track if this is a new/incomplete user for redirect decision
+      let isNewOrIncompleteUser = false;
+      
       // Extract Google user metadata for name pre-filling
       try {
         const userMetadata = data.user?.user_metadata || {};
@@ -83,8 +86,19 @@ export async function GET(req) {
             console.error('❌ Error creating profile:', createError);
           } else {
             console.log('✅ Profile created with Google data:', newProfile);
+            // New profile won't have role or phone_number, so needs to complete profile
+            isNewOrIncompleteUser = true;
           }
         } else if (existingProfile) {
+          // Check if existing profile is complete
+          const hasRole = existingProfile.role?.trim();
+          const hasPhone = existingProfile.phone_number?.trim();
+          
+          if (!hasRole || !hasPhone) {
+            console.log('📋 Existing profile is incomplete - needs role/phone');
+            isNewOrIncompleteUser = true;
+          }
+          
           // Update existing profile with Google data if name fields are empty
           const updateData = {};
           let needsUpdate = false;
@@ -174,40 +188,25 @@ export async function GET(req) {
         console.error('❌ Error in welcome email process:', emailError);
         // Don't fail the login process if email fails
       }
+      
+      // URL to redirect to after sign in process completes
+      const origin = requestUrl.origin;
+      
+      // Redirect based on profile completeness (tracked during profile creation/check above)
+      if (isNewOrIncompleteUser) {
+        console.log("✨ New/incomplete user - Redirecting to profile edit");
+        return NextResponse.redirect(origin + "/profile/edit");
+      }
+      
+      console.log("✅ Existing complete user - Redirecting to:", config.auth.callbackUrl);
+      return NextResponse.redirect(origin + config.auth.callbackUrl);
     } catch (error) {
       console.error("Unexpected error during session exchange:", error);
       return NextResponse.redirect(new URL("/signin?error=unexpected_error", requestUrl.origin));
     }
   }
 
-  // URL to redirect to after sign in process completes
-  // For new users, redirect to profile edit; for existing users, redirect to callback URL
-  const origin = requestUrl.origin;
-  
-  // Check if this is a new user by checking if profile has required fields
-  try {
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (user) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('first_name, last_name, role, phone_number')
-        .eq('id', user.id)
-        .single();
-      
-      // If profile is incomplete (missing role or phone), redirect to profile edit
-      const isIncomplete = !profile || !profile.role?.trim() || !profile.phone_number?.trim();
-      
-      if (isIncomplete) {
-        console.log("New/incomplete user - Redirecting to profile edit");
-        return NextResponse.redirect(origin + "/profile/edit");
-      }
-    }
-  } catch (err) {
-    console.error("Error checking profile completeness:", err);
-  }
-  
-  console.log("Existing user - Redirecting to:", config.auth.callbackUrl);
-  return NextResponse.redirect(origin + config.auth.callbackUrl);
+  // Fallback redirect if no code present
+  console.log("⚠️ No code present - Redirecting to signin");
+  return NextResponse.redirect(new URL("/signin", requestUrl.origin));
 }
