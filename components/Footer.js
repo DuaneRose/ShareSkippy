@@ -32,6 +32,9 @@ const Footer = () => {
               <Link href="/community" className="text-white hover:text-gray-300 transition-colors">
                 Community
               </Link>
+              <Link href="/our-story" className="text-white hover:text-gray-300 transition-colors">
+                Our Story
+              </Link>
               <Link href="/profile" className="text-white hover:text-gray-300 transition-colors">
                 My Profile
               </Link>
