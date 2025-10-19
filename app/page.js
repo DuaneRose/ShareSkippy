@@ -102,10 +102,31 @@ export default function Home() {
     
     const interval = setInterval(() => {
       setCurrentMessageIndex((prev) => (prev + 1) % carouselMessages.length);
-    }, 4000);
+    }, 5000); // Changed to 5 seconds for better readability
 
     return () => clearInterval(interval);
   }, [isPaused]);
+
+  // Handle carousel navigation
+  const goToPrevious = () => {
+    setIsPaused(true);
+    setCurrentMessageIndex((prev) => 
+      prev - 1 < 0 ? carouselMessages.length - 1 : prev - 1
+    );
+    // Resume auto-play after 7 seconds
+    setTimeout(() => setIsPaused(false), 7000);
+  };
+
+  const goToNext = () => {
+    setIsPaused(true);
+    setCurrentMessageIndex((prev) => (prev + 1) % carouselMessages.length);
+    // Resume auto-play after 7 seconds
+    setTimeout(() => setIsPaused(false), 7000);
+  };
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
+  };
 
   // Handle button clicks - redirect to signin page
   const handleButtonClick = (e) => {
@@ -156,22 +177,72 @@ export default function Home() {
             </p>
 
             {/* Carousel Messages */}
-            <div 
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 mb-8 max-w-4xl mx-auto border border-blue-200 shadow-lg cursor-pointer transition-all hover:shadow-xl"
-              onClick={() => setIsPaused(!isPaused)}
-            >
-              <p className="text-lg md:text-xl text-gray-800 italic">
-                {carouselMessages[currentMessageIndex]}
-              </p>
-              <div className="flex justify-center mt-4 space-x-2">
-                {carouselMessages.map((_, index) => (
-                  <div
-                    key={index}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      index === currentMessageIndex ? 'bg-blue-500' : 'bg-gray-300'
-                    }`}
-                  />
-                ))}
+            <div className="relative mb-8 max-w-5xl mx-auto">
+              <div className="flex items-center justify-center gap-2 sm:gap-4">
+                {/* Previous Button */}
+                <button
+                  onClick={goToPrevious}
+                  aria-label="Previous message"
+                  className="flex-shrink-0 p-2 sm:p-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-all transform hover:scale-110 active:scale-95"
+                >
+                  <svg 
+                    className="w-6 h-6 sm:w-8 sm:h-8" 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+
+                {/* Carousel Content */}
+                <div 
+                  className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 flex-1 border border-blue-200 shadow-lg cursor-pointer transition-all hover:shadow-xl"
+                  onClick={togglePause}
+                  title={isPaused ? "Click to resume auto-play" : "Click to pause auto-play"}
+                >
+                  <p className="text-base sm:text-lg md:text-xl text-gray-800 italic min-h-[3rem] flex items-center justify-center">
+                    {carouselMessages[currentMessageIndex]}
+                  </p>
+                  <div className="flex justify-center items-center mt-4 space-x-2">
+                    {carouselMessages.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          index === currentMessageIndex ? 'bg-blue-500 scale-125' : 'bg-gray-300'
+                        }`}
+                      />
+                    ))}
+                    {/* Pause indicator */}
+                    {isPaused && (
+                      <span className="ml-2 text-xs text-gray-500">(paused)</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Next Button */}
+                <button
+                  onClick={goToNext}
+                  aria-label="Next message"
+                  className="flex-shrink-0 p-2 sm:p-3 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-full transition-all transform hover:scale-110 active:scale-95"
+                >
+                  <svg 
+                    className="w-6 h-6 sm:w-8 sm:h-8" 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
               </div>
             </div>
 
