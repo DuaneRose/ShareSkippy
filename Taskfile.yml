@@ -25,8 +25,7 @@ tasks:
     interactive: true
     cmds:
       - cmd: npm install
-      # Idempotent Supabase initialization check
-      - cmd: npx supabase init --force
+      - cmd: test -f supabase/config.toml || npx supabase init
 
   setup:env:
     desc: 'Ensures .env.local exists and is populated with local Supabase variables.'
