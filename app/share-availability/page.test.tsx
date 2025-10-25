@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import '@testing-library/jest-dom';
-import { useUser } from '@/contexts/UserContext';
+import { useUser } from '@/components/providers/SupabaseUserProvider';
 import { useUserProfile, useUserDogs } from '@/hooks/useProfile';
 import { createClient } from '@/libs/supabase/client';
 import ShareAvailability from './page';
@@ -13,7 +13,7 @@ jest.mock('next/navigation', () => ({
   }),
 }));
 
-jest.mock('@/contexts/UserContext');
+jest.mock('@/components/providers/SupabaseUserProvider');
 jest.mock('@/hooks/useProfile');
 jest.mock('@/libs/supabase/client');
 

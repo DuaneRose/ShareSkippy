@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import CommunitySupportSection from '@/components/CommunitySupportSection';
-import { useUser } from '@/contexts/UserContext';
+import { useUser } from '@/components/providers/SupabaseUserProvider';
 import { useUserProfile, useUserDogs } from '@/hooks/useProfile';
 import { createClient } from '@/libs/supabase/client';
 import { formatLocation } from '@/libs/utils';
