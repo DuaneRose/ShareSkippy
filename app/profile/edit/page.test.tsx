@@ -1,7 +1,7 @@
 import { User, PostgrestSingleResponse, PostgrestResponse } from '@supabase/supabase-js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { useParams } from 'next/navigation';
 import React from 'react';
 import { createClient } from '@/libs/supabase/client';
@@ -180,7 +180,9 @@ describe('PublicProfilePage', () => {
       },
     });
 
-    render(<PublicProfilePage />, { wrapper: TestWrapper });
+    await act(async () => {
+      render(<PublicProfilePage />, { wrapper: TestWrapper });
+    });
 
     expect(screen.getByText(/Loading profile.../i)).toBeInTheDocument();
   });
@@ -203,7 +205,9 @@ describe('PublicProfilePage', () => {
     const client = getMockSupabaseClient(errorResponse, mockSuccessResponse([]));
     mockCreateClient.mockReturnValue(client);
 
-    render(<PublicProfilePage />, { wrapper: TestWrapper });
+    await act(async () => {
+      render(<PublicProfilePage />, { wrapper: TestWrapper });
+    });
 
     await waitFor(() => {
       expect(screen.getByText('Error')).toBeInTheDocument();
@@ -225,7 +229,9 @@ describe('PublicProfilePage', () => {
     const client = getMockSupabaseClient(notFoundResponse, mockSuccessResponse([]));
     mockCreateClient.mockReturnValue(client);
 
-    render(<PublicProfilePage />, { wrapper: TestWrapper });
+    await act(async () => {
+      render(<PublicProfilePage />, { wrapper: TestWrapper });
+    });
 
     await waitFor(() => {
       // The component logic checks if data is null and sets the error state to 'Profile not found'
@@ -266,7 +272,9 @@ describe('PublicProfilePage', () => {
     const client = getMockSupabaseClient(profileResponse, dogsResponse);
     mockCreateClient.mockReturnValue(client);
 
-    render(<PublicProfilePage />, { wrapper: TestWrapper });
+    await act(async () => {
+      render(<PublicProfilePage />, { wrapper: TestWrapper });
+    });
 
     await waitFor(() => {
       expect(screen.getByText('Test User')).toBeInTheDocument();
@@ -305,7 +313,9 @@ describe('PublicProfilePage', () => {
     const client = getMockSupabaseClient(profileResponse, dogsResponse);
     mockCreateClient.mockReturnValue(client);
 
-    render(<PublicProfilePage />, { wrapper: TestWrapper });
+    await act(async () => {
+      render(<PublicProfilePage />, { wrapper: TestWrapper });
+    });
 
     await waitFor(() => {
       expect(screen.getByText('Friend Pal')).toBeInTheDocument();
