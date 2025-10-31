@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { createClient } from '@/libs/supabase/client';
 import { useUser } from '@/libs/supabase/hooks';
 import { formatLocation } from '@/libs/utils';
+import { useProfileDraft } from '@/hooks/useProfileDraft';
 import PhotoUpload from '../../../components/ui/PhotoUpload';
 
 const initialProfileState = {
@@ -42,7 +43,15 @@ export default function ProfileEditPage() {
   const [saving, setSaving] = useState(false);
   const [verifyingAddress, setVerifyingAddress] = useState(false);
   const [addressVerified, setAddressVerified] = useState(false);
-  const [profile, setProfile] = useState(initialProfileState);
+  
+  // Use the sessionStorage-based profile draft hook
+  const {
+    profile,
+    setProfile,
+    loadDraft,
+    clearDraft,
+    hasDraft,
+  } = useProfileDraft(initialProfileState);
 
   const loadProfile = useCallback(async () => {
     if (!user || !user.id) return;
@@ -99,8 +108,22 @@ export default function ProfileEditPage() {
       return;
     }
 
-    loadProfile();
-  }, [user, userLoading, router, loadProfile]);
+    // Try to load draft first, then load profile from database
+    const draft = loadDraft();
+    if (draft) {
+      // eslint-disable-next-line no-console
+      console.log('📂 Restoring profile draft from sessionStorage');
+      setLoading(false);
+      // Merge draft with any missing fields from initialProfileState
+      setProfile((prev) => ({
+        ...initialProfileState,
+        ...prev,
+        ...draft,
+      }));
+    } else {
+      loadProfile();
+    }
+  }, [user, userLoading, router, loadDraft, setProfile, loadProfile]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -179,6 +202,9 @@ export default function ProfileEditPage() {
         throw new Error(`Database error: ${dbError.message} (Code: ${dbError.code})`);
       }
 
+      // Clear draft after successful save
+      clearDraft();
+      
       toast.success('Profile saved successfully!');
       window.location.href = '/onboarding/welcome';
     } catch (err) {
